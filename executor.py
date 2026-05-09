@@ -12,15 +12,21 @@ balance snapshot before/after. Unverified buys are never cancelled —
 the bot detects them via balance sync at the next window boundary.
 """
 
+import os
 import time
 from dataclasses import dataclass
 from typing import Optional
 
+from dotenv import load_dotenv
 from py_clob_client_v2 import (
     ClobClient, OrderArgs, MarketOrderArgs, OrderType,
     BalanceAllowanceParams, AssetType, Side
 )
+from py_clob_client_v2.clob_types import ApiCreds
 from py_clob_client_v2.constants import POLYGON
+
+# Load environment variables from .env file
+load_dotenv()
 
 
 FILLED = "FILLED"
@@ -81,14 +87,27 @@ class Executor:
 
     def initialize(self) -> bool:
         try:
+            # Load L2 auth credentials from environment variables
+            clob_secret = os.environ.get("CLOB_SECRET")
+            clob_passphrase = os.environ.get("CLOB_PASSPHRASE")
+            
+            if not clob_secret or not clob_passphrase:
+                raise ValueError("CLOB_SECRET and CLOB_PASSPHRASE must be set in .env for L2 authentication")
+            
+            # Create ApiCreds object for L2 authentication
+            api_creds = ApiCreds(
+                api_key=self.private_key,  # The public API key (derived from private key)
+                api_secret=clob_secret,
+                api_passphrase=clob_passphrase,
+            )
+            
             self.client = ClobClient(
                 host="https://clob.polymarket.com",
-                key=self.private_key,
                 chain_id=POLYGON,
+                creds=api_creds,  # Use pre-derived L2 credentials
                 funder=self.safe_address if self.safe_address else None,
                 signature_type=2 if self.safe_address else 0,
             )
-            self.client.set_api_creds(self.client.create_or_derive_api_key())
             self._initialized = True
             print(f"[executor] Initialized ({'DRY RUN' if self.dry_run else 'LIVE'})")
             print(f"[executor] Max buy price: ${MAX_BUY_PRICE:.2f}")
