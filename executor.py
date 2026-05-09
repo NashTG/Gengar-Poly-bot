@@ -18,8 +18,9 @@ from typing import Optional
 
 from py_clob_client_v2 import (
     ClobClient, OrderArgs, MarketOrderArgs, OrderType,
-    BalanceAllowanceParams, AssetType, Side, POLYGON
+    BalanceAllowanceParams, AssetType, Side
 )
+from py_clob_client_v2.constants import POLYGON
 
 
 FILLED = "FILLED"
