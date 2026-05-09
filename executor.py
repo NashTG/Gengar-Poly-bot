@@ -18,8 +18,9 @@ from typing import Optional
 
 from py_clob_client_v2 import (
     ClobClient, OrderArgs, MarketOrderArgs, OrderType,
-    BalanceAllowanceParams, AssetType, Side, POLYGON
+    BalanceAllowanceParams, AssetType, Side
 )
+from py_clob_client_v2.constants import POLYGON
 
 
 FILLED = "FILLED"
@@ -237,7 +238,10 @@ class Executor:
                 size=float(int(shares)),  # Integer shares as float
                 side=Side.BUY,
             )
-            result = self.client.create_and_post_order(order_args, OrderType.GTC)
+            result = self.client.create_and_post_order(
+                order_args,
+                order_type=OrderType.GTC,
+            )
 
             order_id = result.get("orderID", "")
             if not order_id:
@@ -397,7 +401,10 @@ class Executor:
                 side=Side.SELL,
             )
 
-            result = self.client.create_and_post_market_order(order_args, OrderType.GTC)
+            result = self.client.create_and_post_market_order(
+                order_args,
+                order_type=OrderType.GTC,
+            )
             order_id = result.get("orderID", "")
 
             # Wait for settlement
