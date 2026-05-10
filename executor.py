@@ -88,15 +88,16 @@ class Executor:
     def initialize(self) -> bool:
         try:
             # Load L2 auth credentials from environment variables
+            clob_api_key = os.environ.get("CLOB_API_KEY")
             clob_secret = os.environ.get("CLOB_SECRET")
             clob_passphrase = os.environ.get("CLOB_PASSPHRASE")
             
-            if not clob_secret or not clob_passphrase:
-                raise ValueError("CLOB_SECRET and CLOB_PASSPHRASE must be set in .env for L2 authentication")
+            if not clob_api_key or not clob_secret or not clob_passphrase:
+                raise ValueError("CLOB_API_KEY, CLOB_SECRET and CLOB_PASSPHRASE must be set in .env for L2 authentication")
             
             # Create ApiCreds object for L2 authentication
             api_creds = ApiCreds(
-                api_key=self.private_key,  # The public API key (derived from private key)
+                api_key=clob_api_key,  # The public API key from Polymarket
                 api_secret=clob_secret,
                 api_passphrase=clob_passphrase,
             )
@@ -105,7 +106,7 @@ class Executor:
                 host="https://clob.polymarket.com",
                 chain_id=POLYGON,
                 creds=api_creds,  # Use pre-derived L2 credentials
-                funder=self.safe_address if self.safe_address else None,
+                funder=self.safe_address if self.safe_address else self.private_key,
                 signature_type=2 if self.safe_address else 0,
             )
             self._initialized = True
