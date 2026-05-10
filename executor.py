@@ -91,6 +91,7 @@ class Executor:
             clob_api_key = os.environ.get("CLOB_API_KEY")
             clob_secret = os.environ.get("CLOB_SECRET")
             clob_passphrase = os.environ.get("CLOB_PASSPHRASE")
+            private_key = os.getenv("PRIVATE_KEY")
             
             if not clob_api_key or not clob_secret or not clob_passphrase:
                 raise ValueError("CLOB_API_KEY, CLOB_SECRET and CLOB_PASSPHRASE must be set in .env for L2 authentication")
@@ -105,6 +106,7 @@ class Executor:
             self.client = ClobClient(
                 host="https://clob.polymarket.com",
                 chain_id=POLYGON,
+                key=private_key,
                 creds=api_creds,  # Use pre-derived L2 credentials
                 funder=self.safe_address if self.safe_address else self.private_key,
                 signature_type=2 if self.safe_address else 0,
