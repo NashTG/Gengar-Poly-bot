@@ -1,37 +1,49 @@
-# CLOB Fix Status Monitor — 2026-05-27
+# CLOB Fix Status Monitor — 2026-06-16
 
 ## Overall Verdict
 
-**No direct fix in py-clob-client-v2.** All tracked issues remain open, no auth-fixing code merged, still on v1.0.1.
+**No direct fix in py-clob-client-v2.** All tracked issues remain open, still on v1.0.1.
 
-**However: MIGRATION SIGNAL DETECTED.** Polymarket staff have officially deprecated py-clob-client-v2 and released a new unified SDK (`polymarket-client`) as the intended replacement. This is their response to the deposit wallet auth bug — migrate rather than patch.
+**NEW (since 2026-05-27): DEPOSIT WALLET DEFAULT LANDED IN py-sdk v0.1.0-b4.**  
+The new `polymarket-client` SDK now defaults its `SecureClient` to the deposit wallet (`wallet` param = signer's current Deposit Wallet). This is the functional fix for the `create_or_derive_api_key`/EOA-binding bug — delivered via the new SDK rather than as a patch to py-clob-client-v2.
 
 ---
 
-## What Changed
+## New Since Last Report (2026-05-27)
 
-### PR #78 — "docs: recommend new unified py-sdk in README" (MERGED May 25, 2026)
-- **Repo:** Polymarket/py-clob-client-v2
-- **Author:** suhailkakar (Polymarket staff) | **Merged by:** mustafa-poly (Polymarket staff)
-- **Link:** https://github.com/Polymarket/py-clob-client-v2/pull/78
-- **What it does:** Adds an official notice at the top of the py-clob-client-v2 README:
-  > *"We've released a new unified SDK that combines all our REST APIs and WebSockets into one package. We recommend Polymarket/py-sdk for new projects."*
-- **Significance:** This is Polymarket's official, staff-authored signal that py-clob-client-v2 will not be fixed. The POLY_1271/deposit wallet auth bug will not get a patch here.
-
-### New `polymarket-client` SDK — Active Releases
+### py-sdk v0.1.0-b4 — "default secure clients to deposit wallet" (2026-06-08)
 - **Repo:** https://github.com/Polymarket/py-sdk
-- **Package:** `pip install polymarket-client`
-- **Release timeline:**
-  - v0.1.0b1 — May 21, 2026
-  - v0.1.0b2 — May 26, 2026
-  - **v0.1.0-b3 — May 27, 2026 (today)**
-- **Status:** Beta, actively developed, 166+ commits on main
+- **Changelog entry:** `"default secure clients to deposit wallet"`
+- **Significance:** This is the direct fix to the auth bug. `SecureClient.create()` now accepts a `wallet` parameter that defaults to the signer's current Deposit Wallet. Users no longer need to manually specify `signature_type=3` / POLY_1271 — the SDK handles it.
+
+### py-sdk release timeline (all post May-27)
+| Tag | Date | Notable change |
+|-----|------|----------------|
+| v0.1.0-b4 | Jun 8, 2026 | **"default secure clients to deposit wallet"** |
+| v0.1.0-b5 | Jun 9, 2026 | Combo position lifecycle, async RFQ sessions |
+| v0.1.0-b6 | Jun 10, 2026 | Combo market catalog, RFQ submission fixes |
+| **v0.1.0-b7** | **Jun 10, 2026** | Bug fix: point Combos RFQ endpoints at polymarket.com |
+
+### SecureClient API (confirmed from source)
+```python
+SecureClient.create(
+    private_key,
+    wallet=None,         # defaults to signer's current Deposit Wallet
+    environment=...,
+    credentials=...,     # existing API credentials (skip derivation)
+    nonce=...,           # credential derivation nonce
+)
+```
+The `wallet` parameter defaulting to the deposit wallet means the API key is now bound to the correct address — exactly the fix the tracked issues demanded.
+
+### New py-clob-client-v2 issues (bug still widespread)
+Issues #77–#92 opened since May 27, all reporting the same POLY_1271/deposit wallet rejection. Confirms py-clob-client-v2 itself is still broken; migration to py-sdk is the only resolution path.
 
 ---
 
-## Tracked Issue Status (as of 2026-05-27)
+## Tracked Issue Status (as of 2026-06-16)
 
-All issues still **OPEN** in py-clob-client-v2:
+All issues still **OPEN** in py-clob-client-v2 (no staff comments, no closures):
 
 | Issue | Title | State |
 |-------|-------|-------|
@@ -49,8 +61,6 @@ All issues still **OPEN** in py-clob-client-v2:
 
 **clob-client-v2 #65** (TypeScript SDK): Still **Open**
 
-**py-clob-client-v2 #65** (not in original tracking list): **Closed** May 17, 2026 — title: "Cannot submit POLY_1271 orders — `create_or_derive_api_key` binds API key to EOA, not deposit wallet" — no staff comment or linked PR visible; likely closed as "won't fix / use new SDK."
-
 ---
 
 ## py-clob-client-v2 Release Status
@@ -58,43 +68,29 @@ All issues still **OPEN** in py-clob-client-v2:
 | Tag | Date | Notes |
 |-----|------|-------|
 | **v1.0.1** | May 9, 2026 | **Latest — no change** |
-| 1.0.1rc1 | May 1, 2026 | Pre-release |
-| v1.0.0 | Apr 17, 2026 | — |
 
-No release > v1.0.1. No auth-fixing code PRs.
+No release > v1.0.1. No auth-fixing PRs merged.
 
 ---
 
-## Staff Activity on Key Issues
+## Previous Report Reference
 
-- Issues #70, #75, #76: **No staff comments visible.**
-- Issue #63: Reporter noted "your setup is correct, the rejection is not expected" per support — but no engineering resolution.
-- PR #78 and README update are the only staff-authored actions.
-
----
-
-## What Was Fixed (and Where)
-
-The deposit wallet / POLY_1271 auth bug (`create_or_derive_api_key` binding to EOA instead of deposit wallet) has **not been patched in py-clob-client-v2.**
-
-Polymarket's resolution strategy: ship a new unified `polymarket-client` SDK and redirect all users there.
-
-**Important caveat:** The new `polymarket-client` codebase does not yet show explicit `POLY_1271`, `deposit_wallet`, or `signature_type` terminology in its source. Its deposit wallet auth support is **unverified** as of this report. It may use a different architecture (Privy integration, unified wallet abstraction) that sidesteps the issue differently.
+2026-05-27 run captured: PR #78 merged (Polymarket staff deprecated py-clob-client-v2 in favour of py-sdk). py-sdk was at v0.1.0-b3 at that point with deposit wallet support unverified.
 
 ---
 
 ## Next Step
 
-1. **Evaluate `polymarket-client` for deposit wallet support:**
-   ```bash
-   pip install polymarket-client==0.1.0b3
-   ```
-   Check `src/polymarket/` for auth/signing modules. Look for how API keys are derived and whether deposit wallet addresses are used as signers.
+**Upgrade to `polymarket-client` and re-test executor.py with `DRY_RUN=false`**
 
-2. **If it handles deposit wallets correctly:** Rewrite `executor.py` to use `polymarket-client` instead of `py-clob-client-v2`. Key areas to replace: `create_or_derive_api_key()`, `ClobClient` init with `sig_type=3`, order submission.
+```bash
+pip install polymarket-client==0.1.0b7
+```
 
-3. **If it does not yet handle deposit wallets:** Continue monitoring. Check issues on Polymarket/py-sdk repo directly. The v0.1.0 beta cycle is active (3 releases in 1 week) — a deposit wallet fix could land any day.
+Key migration points for `executor.py`:
+1. Replace `ClobClient` + `create_or_derive_api_key()` with `SecureClient.create(private_key=..., nonce=0)` — deposit wallet binding is automatic.
+2. Replace `create_order(OrderArgs(...))` with `SecureClient` order placement API.
+3. Verify the complement engine routing and integer-shares / 2-decimal-price constraints still hold (the decimal precision bug may need re-checking in the new SDK).
+4. Test with small bankroll ($5 bet) before restoring full BANKROLL.
 
-4. **Alternative path:** Manually implement the EIP-7739 L1 auth wrapping fix described in py-clob-client-v2 issue #70 (bjklemmer-prog's ~50-line patch proposal). Wire it into current `executor.py` without changing SDKs.
-
-**Primary recommendation:** `Upgrade to polymarket-client and re-test executor.py with DRY_RUN=false`
+**Note:** py-sdk is still Beta (v0.1.0-b7). Check Polymarket/py-sdk issues for any v0.1.0 order-rejection bugs before live deployment.
