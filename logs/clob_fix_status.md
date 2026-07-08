@@ -1,30 +1,27 @@
-# CLOB Fix Status Monitor — last updated 2026-07-04
+# CLOB Fix Status Monitor — last updated 2026-07-08
 
 ## Overall Verdict
 
 **No direct fix in py-clob-client-v2.** All 11 tracked issues remain open.
 
-**`polymarket-client` (py-sdk) remains the only working path.** Latest: v0.1.0b13 (Jul 3, 2026).
+**`polymarket-client` (py-sdk) remains the only working path.** Latest: v0.1.0b15 (Jul 7, 2026).
 
 ---
 
-## New Since Last Report (2026-07-02 → 2026-07-04)
+## New Since Last Report (2026-07-04 → 2026-07-08)
 
-### py-sdk advanced to v0.1.0-b13 (2026-07-03)
-- **b12** (2026-07-02): "require 3 minute GTD expirations" — order timing fix
-- **b13** (2026-07-03): "require 3 minute GTD expirations" — additional cleanup
-- No auth-related changelog entries in either release
-- Install target updated below to b13
+### py-sdk advanced to v0.1.0-b15 (2026-07-07)
 
-### Issue #98 self-closed by reporter (2026-07-03)
-- Title: "signature_type=3 (POLY_1271) cannot post orders: 'the order signer address has to be the address of the API KEY'"
-- Closed by original poster; brief exchange confirms they resolved it ("Yep")
-- **Not an official Polymarket fix.** Reporter likely migrated to py-sdk or found a workaround.
+- **b14** (2026-07-07): "builder-api-key management (create/fetch/revoke)", multiple position merges, runnable Python SDK examples, fixed closed market resolution, resolved gasless transaction waiting
+- **b15** (2026-07-07): Added perpetuals trading support
+- Install target updated to b15 below
 
-### py-clob-client-v2 — no auth changes
-- v1.0.2 (released 2026-07-02) was tick sizes only — already captured in prior report
-- No new merged PRs touching create_or_derive_api_key, l1_auth, or deposit wallet
-- No tracked issues closed by Polymarket
+### py-clob-client-v2 — no changes
+
+- No new merged PRs
+- No tracked issues closed
+- Still at v1.0.2 (last release Jul 2, 2026 — tick sizes only)
+- Issues 70, 75, 76 confirmed open, no Polymarket staff comments
 
 ---
 
@@ -32,10 +29,10 @@
 
 ### `polymarket-client` py-sdk — the actual fix
 
-**py-sdk v0.1.0-b4** introduced "default secure clients to deposit wallet" — directly resolving the API key binding bug. All releases through b13 build on this.
+**py-sdk v0.1.0-b4** introduced "default secure clients to deposit wallet" — directly resolving the API key binding bug. All releases through b15 build on this.
 
 ```bash
-pip install polymarket-client==0.1.0b13
+pip install polymarket-client==0.1.0b15
 ```
 
 `SecureClient.create()` binds the API key to the deposit wallet automatically:
@@ -51,7 +48,7 @@ SecureClient.create(
 
 ---
 
-## Tracked Issue Status (as of 2026-07-04)
+## Tracked Issue Status (as of 2026-07-08)
 
 All issues still **OPEN** in py-clob-client-v2:
 
@@ -86,7 +83,9 @@ All issues still **OPEN** in py-clob-client-v2:
 
 | Tag | Date | Notes |
 |-----|------|-------|
-| v0.1.0-b13 | Jul 3, 2026 | GTD expiration cleanup — latest |
+| v0.1.0-b15 | Jul 7, 2026 | Perpetuals trading support — latest |
+| v0.1.0-b14 | Jul 7, 2026 | Builder-API-key management, multi-position merge, examples |
+| v0.1.0-b13 | Jul 3, 2026 | GTD expiration cleanup |
 | v0.1.0-b12 | Jul 2, 2026 | Require 3-min GTD expirations |
 | v0.1.0-b11 | Jun 29, 2026 | "clean up deposit wallet deployment" |
 | v0.1.0-b10 | Jun 26, 2026 | — |
@@ -99,7 +98,7 @@ All issues still **OPEN** in py-clob-client-v2:
 **Upgrade to `polymarket-client` and re-test executor.py with `DRY_RUN=false`**
 
 ```bash
-pip install polymarket-client==0.1.0b13
+pip install polymarket-client==0.1.0b15
 ```
 
 Key migration points for `executor.py`:
@@ -108,4 +107,4 @@ Key migration points for `executor.py`:
 3. Re-verify the integer-shares / 2-decimal-price constraint (decimal precision bug from v10 may resurface in new SDK).
 4. Test with small bankroll ($5 bet) before restoring full BANKROLL.
 
-**Note:** py-sdk is still Beta (v0.1.0-b13). Check Polymarket/py-sdk issues before live deployment.
+**Note:** py-sdk is still Beta (v0.1.0-b15). Check Polymarket/py-sdk issues before live deployment.
