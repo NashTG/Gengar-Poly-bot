@@ -1,26 +1,29 @@
-# CLOB Fix Status Monitor — last updated 2026-07-17
+# CLOB Fix Status Monitor — last updated 2026-07-18
 
 ## Overall Verdict
 
 **No direct fix in py-clob-client-v2.** All 11 tracked issues remain open.
 
-**`polymarket-client` (py-sdk) remains the only working path.** Latest: v0.1.0-b20 (Jul 17, 2026).
+**`polymarket-client` (py-sdk) remains the only working path.** Latest: v0.1.0-b21 (Jul 17, 2026).
 
 ---
 
-## New Since Last Report (2026-07-11 → 2026-07-17)
+## New Since Last Report (2026-07-17 → 2026-07-18)
 
-### py-clob-client-v2 v1.1.0 released TODAY (2026-07-17)
+### No new py-clob-client-v2 release today
 
-- **What changed:** Async execution pipeline — POST /order responses now return `tradeIDs` instead of `transactionHashes`. The SDK resolves these internally before returning, maintaining backward compatibility.
-- **Auth bug:** NOT fixed. Deposit wallet / EIP-7702 issues (#70, #75, #76) still open with no Polymarket staff comments.
-- **executor.py impact:** No code changes needed — the SDK handles the tradeID→hash resolution transparently. `result.get("orderID", "")` still works.
+- Still on v1.1.0 (released Jul 17). No auth fix. Issues #70, #75, #76 still open.
+- 53 open issues total on the repo; all 11 tracked auth issues remain unresolved.
 
-### py-sdk advanced to v0.1.0-b20 (2026-07-17)
+### py-sdk advanced to v0.1.0-b21 (2026-07-17, same day as b20)
 
-- **b19** (Jul 13): Add RESOLVED_PARTIAL to ComboPositionStatus — minor fix, not auth-related
-- **b20** (Jul 17): TokenId-keyed maps from batch price reads, websocket handling improvements, batched Perps trade/fill frames — not auth-related
-- The deposit wallet fix (via `SecureClient.create()`) introduced in b4 remains intact through b20
+- **b21** (Jul 17): Stop approving retired neg-risk adapter in trading setup (#179) — minor relayer fix, NOT auth-related
+- The deposit wallet fix (via `SecureClient.create()`) introduced in b4 remains intact through b21
+
+### Prior reference (established 2026-07-17)
+
+- **py-clob-client-v2 v1.1.0** (Jul 17): Async execution — tradeIDs instead of txHashes (handled internally). No auth fix.
+- **py-sdk v0.1.0-b20** (Jul 17): TokenId-keyed batch price reads, websocket improvements, Perps frames.
 
 ---
 
@@ -31,7 +34,7 @@
 **py-sdk v0.1.0-b4** introduced "default secure clients to deposit wallet" — directly resolving the API key binding bug. All releases through b20 build on this.
 
 ```bash
-pip install polymarket-client==0.1.0b20
+pip install polymarket-client==0.1.0b21
 ```
 
 `SecureClient.create()` binds the API key to the deposit wallet automatically:
@@ -83,7 +86,8 @@ All issues still **OPEN** in py-clob-client-v2:
 
 | Tag | Date | Notes |
 |-----|------|-------|
-| v0.1.0-b20 | Jul 17, 2026 | TokenId-keyed batch price reads, Perps frames — latest |
+| v0.1.0-b21 | Jul 17, 2026 | Stop approving retired neg-risk adapter — latest |
+| v0.1.0-b20 | Jul 17, 2026 | TokenId-keyed batch price reads, Perps frames |
 | v0.1.0-b19 | Jul 13, 2026 | RESOLVED_PARTIAL ComboPositionStatus fix |
 | v0.1.0-b18 | Jul 10, 2026 | Websocket fixes, Combo activity parse |
 | v0.1.0-b17 | Jul 10, 2026 | Combo data pagination, typed overloads |
@@ -102,7 +106,7 @@ All issues still **OPEN** in py-clob-client-v2:
 **Upgrade to `polymarket-client` and re-test executor.py with `DRY_RUN=false`**
 
 ```bash
-pip install polymarket-client==0.1.0b20
+pip install polymarket-client==0.1.0b21
 ```
 
 Key migration points for `executor.py`:
