@@ -1,10 +1,34 @@
-# CLOB Fix Status Monitor — last updated 2026-07-23
+# CLOB Fix Status Monitor — last updated 2026-07-25
 
 ## Overall Verdict
 
-**No direct fix in py-clob-client-v2.** All 11 tracked issues remain open (56 total open issues on repo).
+**No direct fix in py-clob-client-v2.** All 11 tracked issues remain open.
 
-**`polymarket-client` (py-sdk) is now STABLE at v0.1.0 (Jul 22).** This is the only working fix path for deposit wallet / POLY_1271 order signing.
+**`polymarket-client` (py-sdk) is now at v0.2.0 (Jul 24).** This is the only working fix path for deposit wallet / POLY_1271 order signing. Deposit wallet auth fix intact since b4.
+
+---
+
+## New Since Last Report (2026-07-23 → 2026-07-25)
+
+### py-sdk v0.2.0 released July 24, 2026
+
+New features and fixes — **no auth changes; deposit wallet binding intact**:
+
+- `add collateral return plan/execute to secure clients` (new SecureClient methods)
+- `add wait_for_order_settlement` for async order settlement
+- `add fee tiers to perps fee schedule` (model definitions)
+- `add isolated_only to perps instrument` parameter
+- Pagination fixes: cap page_size on gamma offset-paginated endpoints, frame truncation fix
+- `parse zero GTC expiration as None in OpenOrder` (#191)
+- Perps: failed withdrawal status, unknown statuses passed through as strings
+
+```bash
+pip install polymarket-client==0.2.0
+```
+
+### py-clob-client-v2: No changes
+
+- Still v1.1.0 (Jul 17). All 11 tracked auth issues remain open. No staff comments on #70, #75, #76.
 
 ---
 
@@ -110,7 +134,8 @@ All issues still **OPEN** in py-clob-client-v2:
 
 | Tag | Date | Notes |
 |-----|------|-------|
-| **v0.1.0** | **Jul 22, 2026** | **STABLE** — condition_id alias, typed OrderIds, stream fixes, tick-size validation |
+| **v0.2.0** | **Jul 24, 2026** | Collateral return, order settlement wait, perps fee tiers, pagination fixes — NO auth change |
+| v0.1.0 | Jul 22, 2026 | STABLE — condition_id alias, typed OrderIds, stream fixes, tick-size validation |
 | v0.1.0-b21 | Jul 17, 2026 | Stop approving retired neg-risk adapter |
 | v0.1.0-b20 | Jul 17, 2026 | TokenId-keyed batch price reads, Perps frames |
 | v0.1.0-b19 | Jul 13, 2026 | RESOLVED_PARTIAL ComboPositionStatus fix |
@@ -128,10 +153,10 @@ All issues still **OPEN** in py-clob-client-v2:
 
 ## Next Step
 
-**Upgrade to `polymarket-client` stable and re-test executor.py with `DRY_RUN=false`**
+**Upgrade to `polymarket-client` v0.2.0 and re-test executor.py with `DRY_RUN=false`**
 
 ```bash
-pip install polymarket-client==0.1.0
+pip install polymarket-client==0.2.0
 ```
 
 Key migration points for `executor.py`:
