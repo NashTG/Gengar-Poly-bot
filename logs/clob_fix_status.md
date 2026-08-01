@@ -1,10 +1,33 @@
-# CLOB Fix Status Monitor — last updated 2026-07-25
+# CLOB Fix Status Monitor — last updated 2026-08-01
 
 ## Overall Verdict
 
 **No direct fix in py-clob-client-v2.** All 11 tracked issues remain open.
 
-**`polymarket-client` (py-sdk) is now at v0.2.0 (Jul 24).** This is the only working fix path for deposit wallet / POLY_1271 order signing. Deposit wallet auth fix intact since b4.
+**`polymarket-client` (py-sdk) is now at v0.3.0b2 (Jul 31).** This is the only working fix path for deposit wallet / POLY_1271 order signing. Stable fix path: `pip install polymarket-client==0.2.0`. Stable v0.3.0 expected soon.
+
+---
+
+## New Since Last Report (2026-07-25 → 2026-08-01)
+
+### py-sdk v0.3.0b2 (Jul 31, 2026)
+
+- "self-heal deposit wallet nonce on submit rejection" — deposit wallet reliability improvement
+- `TAKER_REBATE`, `DEPOSIT`, `WITHDRAWAL` activity types added
+
+### py-sdk v0.3.0b1 (Jul 29, 2026)
+
+- Chainlink TWAP subscriptions support
+- Perps fills pagination with native cursor and sorting
+- Account notifications in perps session reads/events
+- Granular quote validation errors for RFQ
+- Exposed `retry_after` on `RequestRejectedError`
+
+**No auth or deposit wallet breaking changes in either beta. Deposit wallet binding via `SecureClient.create()` remains intact.**
+
+### py-clob-client-v2: No changes
+
+- Still v1.1.0. All 11 tracked auth issues remain open. No staff comments on #70, #75, #76.
 
 ---
 
@@ -134,7 +157,9 @@ All issues still **OPEN** in py-clob-client-v2:
 
 | Tag | Date | Notes |
 |-----|------|-------|
-| **v0.2.0** | **Jul 24, 2026** | Collateral return, order settlement wait, perps fee tiers, pagination fixes — NO auth change |
+| **v0.3.0b2** | **Jul 31, 2026** | self-heal deposit wallet nonce on submit rejection; new activity types — NO auth change |
+| v0.3.0b1 | Jul 29, 2026 | Chainlink TWAP, perps fills pagination, account notifications, quote validation — NO auth change |
+| v0.2.0 | Jul 24, 2026 | Collateral return, order settlement wait, perps fee tiers, pagination fixes — NO auth change |
 | v0.1.0 | Jul 22, 2026 | STABLE — condition_id alias, typed OrderIds, stream fixes, tick-size validation |
 | v0.1.0-b21 | Jul 17, 2026 | Stop approving retired neg-risk adapter |
 | v0.1.0-b20 | Jul 17, 2026 | TokenId-keyed batch price reads, Perps frames |
@@ -153,10 +178,11 @@ All issues still **OPEN** in py-clob-client-v2:
 
 ## Next Step
 
-**Upgrade to `polymarket-client` v0.2.0 and re-test executor.py with `DRY_RUN=false`**
+**Upgrade to `polymarket-client` (stable v0.2.0 or pre-release v0.3.0b2) and re-test executor.py with `DRY_RUN=false`**
 
 ```bash
-pip install polymarket-client==0.2.0
+pip install polymarket-client==0.2.0        # stable
+pip install polymarket-client==0.3.0b2      # latest beta (nonce self-healing)
 ```
 
 Key migration points for `executor.py`:
