@@ -1,10 +1,29 @@
-# CLOB Fix Status Monitor — last updated 2026-08-01
+# CLOB Fix Status Monitor — last updated 2026-08-04
 
 ## Overall Verdict
 
 **No direct fix in py-clob-client-v2.** All 11 tracked issues remain open.
 
 **`polymarket-client` (py-sdk) is now at v0.3.0b2 (Jul 31).** This is the only working fix path for deposit wallet / POLY_1271 order signing. Stable fix path: `pip install polymarket-client==0.2.0`. Stable v0.3.0 expected soon.
+
+---
+
+## New Since Last Report (2026-08-01 → 2026-08-04)
+
+### py-clob-client-v2: No changes
+
+- Still v1.1.0. Now **57 open issues** (up from ~53 on Jul 18).
+- Three new auth-related issues filed since last report:
+  - **#103** (Jul 19): "Deposit wallet rejects exported EOA signatures — investigate signature_type=3 validation and CLOB auth flow"
+  - **#104** (Jul 22): "POLY_PROXY order signature rejected as invalid...POLY_1271 rejects as invalid signer address"
+  - **#105** (Aug 1): "get_balance_allowance() returns balance=0, allowance=0 for signature_type=1 (POLY_PROXY) despite funder wallet holding real pUSD"
+- All 11 originally tracked auth issues remain open.
+- No staff comments on #70, #75, #76.
+
+### py-sdk (polymarket-client): No new releases
+
+- Still v0.3.0b2 (Jul 31). No stable v0.3.0 yet.
+- Deposit wallet binding via `SecureClient.create()` remains the only working fix path.
 
 ---
 
@@ -121,7 +140,7 @@ SecureClient.create(
 
 ---
 
-## Tracked Issue Status (as of 2026-07-23)
+## Tracked Issue Status (as of 2026-08-04)
 
 All issues still **OPEN** in py-clob-client-v2:
 
