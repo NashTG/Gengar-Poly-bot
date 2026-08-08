@@ -1,10 +1,27 @@
-# CLOB Fix Status Monitor — last updated 2026-08-06
+# CLOB Fix Status Monitor — last updated 2026-08-08
 
 ## Overall Verdict
 
 **No direct fix in py-clob-client-v2.** All 11 tracked issues remain open.
 
-**`polymarket-client` (py-sdk) is now at v0.4.0 (Aug 6, today).** This is the only working fix path for deposit wallet / POLY_1271 order signing. Recommended install: `pip install polymarket-client==0.4.0`.
+**`polymarket-client` (py-sdk) is now at v0.5.0 (Aug 7, 2026).** This is the only working fix path for deposit wallet / POLY_1271 order signing. Recommended install: `pip install polymarket-client==0.5.0`.
+
+---
+
+## New Since Last Report (2026-08-06 → 2026-08-08)
+
+### py-sdk v0.5.0 released August 7, 2026
+
+- "cache order market metadata"
+- "add auto-cancel support" (perpetuals only)
+- "add id to funding payment records" (perpetuals)
+- Bugfixes: "match tagged TOML package name", "prevent order update race" (perpetuals)
+- **No changes to deposit wallet, SecureClient, auth, or POLY_1271** — deposit wallet binding via `SecureClient.create()` remains intact
+- **Updated install command**: `pip install polymarket-client==0.5.0`
+
+### py-clob-client-v2: No changes
+
+- Still v1.1.0. All 11 tracked auth issues remain open. No staff comments on #70, #75, #76.
 
 ---
 
@@ -210,7 +227,8 @@ All issues still **OPEN** in py-clob-client-v2:
 
 | Tag | Date | Notes |
 |-----|------|-------|
-| **v0.4.0** | **Aug 6, 2026** | Isolated margin adjustments (perps only), test + docs fixes — NO auth change |
+| **v0.5.0** | **Aug 7, 2026** | Cache order metadata, auto-cancel support (perps), TOML fix — NO auth change |
+| v0.4.0 | Aug 6, 2026 | Isolated margin adjustments (perps only), test + docs fixes — NO auth change |
 | v0.3.0 | Aug 4, 2026 | STABLE — includes all b1+b2 changes; deposits/withdrawals in list_activity by default — NO auth change |
 | v0.3.0b2 | Jul 31, 2026 | self-heal deposit wallet nonce on submit rejection; new activity types — NO auth change |
 | v0.3.0b1 | Jul 29, 2026 | Chainlink TWAP, perps fills pagination, account notifications, quote validation — NO auth change |
@@ -233,10 +251,10 @@ All issues still **OPEN** in py-clob-client-v2:
 
 ## Next Step
 
-**Upgrade to `polymarket-client` (stable v0.4.0) and re-test executor.py with `DRY_RUN=false`**
+**Upgrade to `polymarket-client` (stable v0.5.0) and re-test executor.py with `DRY_RUN=false`**
 
 ```bash
-pip install polymarket-client==0.4.0        # latest stable (nonce self-healing + isolated margin)
+pip install polymarket-client==0.5.0        # latest stable (auto-cancel, order metadata cache)
 ```
 
 Key migration points for `executor.py`:
