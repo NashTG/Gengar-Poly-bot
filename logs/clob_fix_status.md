@@ -1,6 +1,25 @@
 # CLOB Fix Monitor Status
 
-**Date checked:** 2026-08-11
+**Date checked:** 2026-08-12
+
+---
+
+## New since 2026-08-11
+
+### py-clob-client-v2: No new release — but community confirmed full breakage
+
+- Still v1.1.0. All 11 tracked auth issues remain open. No staff comments on #70, #75, #76.
+- **Issue #111 filed Aug 10** (most important): "Root cause for 'maker address not allowed': V2 requires the deposit-wallet flow (Poly1271 + ERC-7739 nested signing), which this SDK cannot produce — verified working via rs-clob-client-v2"
+  - Reporter confirmed via the Rust SDK: **py-clob-client-v2 cannot produce ERC-7739 nested TypedDataSign wrapping for any wallet mode** — the bug is more fundamental than previously understood
+  - This means py-clob-client-v2 is **broken for all wallet modes on the V2 exchange**, not just deposit wallets
+  - No Polymarket staff response
+- **Issue #56 updated Aug 12**: Magic.link/proxy wallet variant of the same 'maker address not allowed' error — still open, no staff response
+- **Issue #75 updated Aug 10**: Still open, no new resolution
+
+### py-sdk (polymarket-client): No new release
+
+- Still v0.5.0 (August 7, 2026). `SecureClient.create()` deposit wallet binding intact.
+- `pip install polymarket-client==0.5.0` remains the only working path.
 
 ---
 
