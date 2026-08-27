@@ -1,4 +1,4 @@
-# CLOB Fix Status — 2026-08-26
+# CLOB Fix Status — 2026-08-27
 
 ## Summary
 
@@ -17,40 +17,44 @@ Two releases since the monitoring baseline (v1.0.1, 2026-05-09):
 
 **Neither release fixes the EIP-7702 deposit-wallet API-key derivation bug.**
 
-### Tracked issue states (as of 2026-08-26)
+### Tracked issue states (as of 2026-08-27)
 
-- Issue #55 — unknown state (not visible in search)
-- Issue #56 — **OPEN**
-- Issue #57 — unknown state
-- Issue #58 — unknown state
-- Issue #61 — **OPEN**
-- Issue #63 — unknown state
-- Issue #64 — **OPEN**
+- Issue #57 — **OPEN**: Privy TSS / Magic Wallet incompatibility
 - Issue #70 — **OPEN**: "L1 auth always binds API key to EOA, never the deposit wallet"
-- Issue #71 — unknown state
+- Issue #71 — **OPEN**: POLY_1271 orders fail with "order signer address has to be the address of the API KEY"
 - Issue #75 — **OPEN**: "POLY_1271 deposit-wallet orders rejected: signer != API KEY"
 - Issue #76 — **OPEN**: "CLOB V2 Python SDK unusable for deposit wallets"
-- clob-client-v2 #65 — **OPEN**: same root cause in JS/Rust SDK
+- clob-client-v2 #65 — status unconfirmed (access limited)
 
-Zero Polymarket staff responses on #70, #75, or #76.
+Zero Polymarket staff responses visible on #70, #75, or #76.
 
-### Notable merged PR
+### Notable merged PRs (py-clob-client-v2)
 
 - **PR #39** (merged 2026-05-01): "feat: add deposit wallet order support" — added POLY_1271 order *signing* in OrderBuilder. **Partial fix only**: order signing works, but API key *derivation* (`create_or_derive_api_key`) still binds to EOA. Issues were opened after this merge.
   - https://github.com/Polymarket/py-clob-client-v2/pull/39
+
+- **PR #78** (merged 2026-05-25): "docs: recommend new unified py-sdk in README" — Polymarket is signaling they won't fix this in py-clob-client-v2 directly.
+  - https://github.com/Polymarket/py-clob-client-v2/pull/78
 
 ---
 
 ## KEY FINDING: Polymarket/py-sdk is the actual fix path
 
-**PR #78** (merged 2026-05-25) updated the py-clob-client-v2 README to recommend the new unified SDK:
-
-> "We've released a new unified SDK that combines all our REST APIs and WebSockets into one package. We recommend Polymarket/py-sdk for new projects."
+Polymarket released a new unified SDK that combines all REST APIs and WebSockets into one package:
 
 - Repo: https://github.com/Polymarket/py-sdk
-- Latest release: **v0.6.0** (2026-08-13) — actively maintained
-- No open issues about deposit-wallet auth, EIP-7702, POLY_1271, or API key binding
-- Merged PR: "self-heal deposit wallet nonce on submit rejection" — confirms deposit wallet flow is functional
+- **Latest release: v0.7.0** (2026-08-26) — released yesterday, actively maintained
+- v0.3.0-b2 explicitly includes: "self-heal deposit wallet nonce on submit rejection" — confirms deposit wallet flow is functional
+- No open issues about POLY_1271, EIP-7702, or API key binding
+
+### py-sdk release history (relevant versions)
+
+| Version | Date | Notable |
+|---------|------|---------|
+| v0.7.0 | 2026-08-26 | Scoped session keys, typed trading restrictions |
+| v0.6.0 | 2026-08-13 | Requester-side combo RFQ support |
+| v0.3.0-b2 | 2026-07-31 | Deposit wallet nonce self-healing |
+| v0.1.0 | 2026-07-22 | First stable release |
 
 ### What this means for PolyBot
 
@@ -58,7 +62,7 @@ Zero Polymarket staff responses on #70, #75, or #76.
 
 ---
 
-## v1.1.0 Breaking Change Risk (if upgrading py-clob-client-v2)
+## v1.1.0 Breaking Change Risk (if staying on py-clob-client-v2)
 
 `POST /order` now returns `tradeIDs` instead of `transactionHashes`. Check `executor.py`'s order verification logic — if it reads `transactionHashes` from the response, the upgrade breaks verification.
 
@@ -66,8 +70,8 @@ Zero Polymarket staff responses on #70, #75, or #76.
 
 ## Next Step
 
-**Migrate to `Polymarket/py-sdk` v0.6.0** rather than upgrading py-clob-client-v2:
-1. `pip install polymarket-client==0.6.0`
+**Migrate to `Polymarket/py-sdk` v0.7.0** rather than upgrading py-clob-client-v2:
+1. `pip install polymarket-client==0.7.0` (verify package name from py-sdk pyproject.toml)
 2. Rewrite `executor.py` authentication to use py-sdk's deposit-wallet flow
-3. Confirm deposit-wallet API key derivation uses the correct signer address
+3. Confirm deposit-wallet API key derivation uses the deposit wallet address (not EOA)
 4. Test with `DRY_RUN=true`, then `DRY_RUN=false` with MIN_BET=5
