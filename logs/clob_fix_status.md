@@ -1,4 +1,4 @@
-# CLOB Fix Status — 2026-08-27
+# CLOB Fix Status — 2026-09-01
 
 ## Summary
 
@@ -17,14 +17,14 @@ Two releases since the monitoring baseline (v1.0.1, 2026-05-09):
 
 **Neither release fixes the EIP-7702 deposit-wallet API-key derivation bug.**
 
-### Tracked issue states (as of 2026-08-27)
+### Tracked issue states (as of 2026-09-01)
 
 - Issue #57 — **OPEN**: Privy TSS / Magic Wallet incompatibility
 - Issue #70 — **OPEN**: "L1 auth always binds API key to EOA, never the deposit wallet"
 - Issue #71 — **OPEN**: POLY_1271 orders fail with "order signer address has to be the address of the API KEY"
 - Issue #75 — **OPEN**: "POLY_1271 deposit-wallet orders rejected: signer != API KEY"
 - Issue #76 — **OPEN**: "CLOB V2 Python SDK unusable for deposit wallets"
-- clob-client-v2 #65 — status unconfirmed (access limited)
+- clob-client-v2 #65 — **OPEN**: "Cannot submit POLY_1271 orders — create_or_derive_api_key binds key to EOA"
 
 Zero Polymarket staff responses visible on #70, #75, or #76.
 
@@ -43,7 +43,7 @@ Zero Polymarket staff responses visible on #70, #75, or #76.
 Polymarket released a new unified SDK that combines all REST APIs and WebSockets into one package:
 
 - Repo: https://github.com/Polymarket/py-sdk
-- **Latest release: v0.7.0** (2026-08-26) — released yesterday, actively maintained
+- **Latest release: v0.7.1** (2026-08-28) — actively maintained, confirmed deposit wallet flow functional
 - v0.3.0-b2 explicitly includes: "self-heal deposit wallet nonce on submit rejection" — confirms deposit wallet flow is functional
 - No open issues about POLY_1271, EIP-7702, or API key binding
 
@@ -51,6 +51,7 @@ Polymarket released a new unified SDK that combines all REST APIs and WebSockets
 
 | Version | Date | Notable |
 |---------|------|---------|
+| v0.7.1 | 2026-08-28 | Session key expiration bug fixes (default expiration, restore expiration buffer) |
 | v0.7.0 | 2026-08-26 | Scoped session keys, typed trading restrictions |
 | v0.6.0 | 2026-08-13 | Requester-side combo RFQ support |
 | v0.3.0-b2 | 2026-07-31 | Deposit wallet nonce self-healing |
@@ -70,8 +71,10 @@ Polymarket released a new unified SDK that combines all REST APIs and WebSockets
 
 ## Next Step
 
-**Migrate to `Polymarket/py-sdk` v0.7.0** rather than upgrading py-clob-client-v2:
-1. `pip install polymarket-client==0.7.0` (verify package name from py-sdk pyproject.toml)
+**Upgrade py-clob-client-v2 and re-test executor.py with MANUAL_MODE=false**, or better:
+
+**Migrate to `Polymarket/py-sdk` v0.7.1** rather than upgrading py-clob-client-v2:
+1. `pip install polymarket-client==0.7.1` (verify package name from py-sdk pyproject.toml)
 2. Rewrite `executor.py` authentication to use py-sdk's deposit-wallet flow
 3. Confirm deposit-wallet API key derivation uses the deposit wallet address (not EOA)
 4. Test with `DRY_RUN=true`, then `DRY_RUN=false` with MIN_BET=5
