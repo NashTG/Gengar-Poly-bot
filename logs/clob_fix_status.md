@@ -1,4 +1,4 @@
-# CLOB Fix Status — 2026-09-01
+# CLOB Fix Status — 2026-09-03 (updated; originally 2026-09-01)
 
 ## Summary
 
@@ -78,3 +78,13 @@ Polymarket released a new unified SDK that combines all REST APIs and WebSockets
 2. Rewrite `executor.py` authentication to use py-sdk's deposit-wallet flow
 3. Confirm deposit-wallet API key derivation uses the deposit wallet address (not EOA)
 4. Test with `DRY_RUN=true`, then `DRY_RUN=false` with MIN_BET=5
+
+---
+
+## 2026-09-03 Status Check (no new changes)
+
+Ran scheduled check. No changes since 2026-09-01:
+- py-sdk latest: **v0.7.1** (2026-08-28) — unchanged
+- Issues #56, #61, #75 updated Aug 21–25 but remain **open**; no closures
+- No new releases or merged auth-related PRs in py-clob-client-v2
+- **Action still required**: migrate executor.py to Polymarket/py-sdk
