@@ -88,3 +88,20 @@ Ran scheduled check. No changes since 2026-09-01:
 - Issues #56, #61, #75 updated Aug 21–25 but remain **open**; no closures
 - No new releases or merged auth-related PRs in py-clob-client-v2
 - **Action still required**: migrate executor.py to Polymarket/py-sdk
+
+---
+
+## 2026-09-04 Status Check — NEW py-sdk releases
+
+Two new `Polymarket/py-sdk` releases since the last check:
+
+| Version | Date | Notable |
+|---------|------|---------|
+| **v0.9.0** | 2026-09-04 (today) | "support Poly V2 identifiers and trading"; asset ID compatibility bug fixes |
+| **v0.8.0** | 2026-09-03 | Market combo status, protocol version exposure, session-key relayer improvements, multiple bug fixes |
+
+py-clob-client-v2 status: unchanged. Issues #55, #64, #70, #71, #75, #76 still **OPEN**; no Polymarket staff responses. No new auth-related PRs merged.
+
+**py-sdk is now at v0.9.0 — the recommended migration target has updated twice in two days. Migration to py-sdk remains the correct path for fixing the deposit-wallet auth bug.**
+
+Next step: migrate executor.py to `Polymarket/py-sdk v0.9.0`.
