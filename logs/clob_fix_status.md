@@ -105,3 +105,29 @@ py-clob-client-v2 status: unchanged. Issues #55, #64, #70, #71, #75, #76 still *
 **py-sdk is now at v0.9.0 — the recommended migration target has updated twice in two days. Migration to py-sdk remains the correct path for fixing the deposit-wallet auth bug.**
 
 Next step: migrate executor.py to `Polymarket/py-sdk v0.9.0`.
+
+---
+
+## 2026-09-06 Status Check — Issue #115 closed (signature_type=2 blocker for PolyBot!)
+
+**py-sdk**: No new releases. Still at **v0.9.0** (2026-09-04) — unchanged.
+
+**py-clob-client-v2**:
+- Issues #70, #71, #75, #76 remain **OPEN**. No new auth-related PRs merged.
+- No Polymarket staff responses on tracked issues.
+
+### NEW CRITICAL FINDING: Issue #115 closed 2026-09-05
+
+**Issue #115** — "signature_type=2 orders rejected ('maker address not allowed') even with credentials proven valid via old client" — was **CLOSED on 2026-09-05** (yesterday).
+
+This issue is directly relevant to PolyBot: the bot uses **signature_type=2 (Safe/Gnosis proxy wallet)**, and this issue describes that same setup being rejected by py-clob-client-v2 with `"maker address not allowed, please use the deposit wallet flow"`. The closure method (fix vs. wontfix/duplicate) was not visible from the issue page.
+
+**Why this matters for PolyBot:**
+- PolyBot's wallet is a Gnosis Safe at `0xbcd8Da52677827188A4c205dCC0D46eda3038A50` using signature_type=2
+- Polymarket's docs claim "Existing Proxy and Safe users are unaffected and can keep using signature types 1 and 2"
+- But issue #115 shows that is NOT true in py-clob-client-v2 — Safe users get "maker address not allowed"
+- The issue being closed *may* indicate a fix landed — or it may have been closed as wontfix/duplicate pointing to py-sdk
+
+**Action required**: Check how #115 was resolved (fix, wontfix, or duplicate) before attempting any live trading with py-clob-client-v2. Migration to py-sdk v0.9.0 remains the safest path.
+
+**Link**: https://github.com/Polymarket/py-clob-client-v2/issues/115
