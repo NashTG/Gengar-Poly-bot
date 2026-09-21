@@ -1,82 +1,76 @@
-# CLOB Fix Status — 2026-09-19
+# CLOB Fix Status — 2026-09-21
 
-## TL;DR
+## Summary
 
-New releases exist (v1.0.2, v1.1.0) but **neither fixes the POLY_1271 deposit-wallet auth bug**.
-All tracked issues remain open. Polymarket's official response appears to be redirecting users to a new unified SDK (`Polymarket/py-sdk`).
-
----
-
-## What Changed
-
-### New releases (both newer than v1.0.1)
-
-| Release | Date | What it fixes | Fixes auth bug? |
-|---------|------|---------------|-----------------|
-| **v1.0.2** | 2026-07-02 | Adds CLOB tick sizes 0.005 and 0.0025 | ❌ No |
-| **v1.1.0** | 2026-07-17 | Async execution / tradeID handling (server now returns tradeIDs instead of transactionHashes) | ❌ No |
-
-Links:
-- https://github.com/Polymarket/py-clob-client-v2/releases/tag/v1.0.2
-- https://github.com/Polymarket/py-clob-client-v2/releases/tag/v1.1.0
-
-### Merged PRs
-
-| PR | Title | Date | Relevant? |
-|----|-------|------|-----------|
-| #39 | feat: add deposit wallet order support | 2026-05-01 | Partial — adds POLY_1271 signing path for orders but does NOT fix `create_or_derive_api_key` L1 auth binding |
-| #78 | docs: recommend new unified py-sdk in README | 2026-05-25 | Notable — official redirect to `Polymarket/py-sdk` |
-| #96 | version: 1.0.2 | 2026-07-02 | No |
-| #101 | refactor: resolve transaction hashes internally | 2026-07-17 | No |
-
-**No merged PR touches `create_or_derive_api_key`, `create_l1_headers`, or the EOA→deposit-wallet API-key binding path.**
+Two new releases exist beyond v1.0.1, but **neither fixes the deposit-wallet / EIP-7702 auth bug**.
+All tracked issues remain open. No Polymarket org member comments on any tracked issue.
 
 ---
 
-## Tracked Issues Status
+## New Releases Found
 
-| Issue | Repo | Status | Notes |
-|-------|------|--------|-------|
-| #55 | py-clob-client-v2 | Open | Not confirmed closed in search results |
-| #56 | py-clob-client-v2 | Open | Not confirmed closed |
-| #57 | py-clob-client-v2 | Open | Not confirmed closed |
-| #58 | py-clob-client-v2 | Open | Not confirmed closed |
-| #61 | py-clob-client-v2 | Open | Not confirmed closed |
-| #63 | py-clob-client-v2 | Open | Not confirmed closed |
-| #64 | py-clob-client-v2 | Open | Not confirmed closed |
-| #70 | py-clob-client-v2 | **Open** | Confirmed. No Polymarket staff comments. |
-| #71 | py-clob-client-v2 | Open | Not confirmed closed |
-| #75 | py-clob-client-v2 | **Open** | Confirmed. No Polymarket staff comments. |
-| #76 | py-clob-client-v2 | **Open** | Confirmed. No Polymarket staff comments. |
-| #65 | clob-client-v2 | **Open** | Confirmed. No Polymarket staff comments. Only Rust SDK reportedly works. |
+| Version | Released | What Changed |
+|---------|----------|--------------|
+| **v1.1.0** | 2026-07-17 | Async execution: resolve transaction hashes internally when API returns `tradeIDs` instead of `transactionsHashes` |
+| **v1.0.2** | 2026-07-02 | Added support for CLOB tick sizes `0.005` and `0.0025` |
 
-No Polymarket org members (JonathanAmenechi, suhailkakar) have commented on issues 70, 75, or 76.
+- **v1.0.2**: https://github.com/Polymarket/py-clob-client-v2/releases/tag/v1.0.2
+- **v1.1.0**: https://github.com/Polymarket/py-clob-client-v2/releases/tag/v1.1.0
+
+Neither release touches `create_or_derive_api_key`, `l1_auth`, `create_l1_headers`, or deposit-wallet authentication.
 
 ---
 
-## Notable: New Unified SDK
+## Tracked Issues — All Still OPEN
 
-PR #78 (merged 2026-05-25) adds a README note pointing new projects to **`Polymarket/py-sdk`** (REST + WebSockets unified).
-This appears to be Polymarket's strategic response — deprecate py-clob-client-v2 in favor of a new SDK that may handle deposit-wallet auth correctly.
+| Repo | Issue | Status |
+|------|-------|--------|
+| py-clob-client-v2 | #55 | Open |
+| py-clob-client-v2 | #57 | Open |
+| py-clob-client-v2 | #61 | Open |
+| py-clob-client-v2 | #63 | Open |
+| py-clob-client-v2 | #64 | Open |
+| py-clob-client-v2 | #70 | Open |
+| py-clob-client-v2 | #71 | Open |
+| py-clob-client-v2 | #75 | Open |
+| py-clob-client-v2 | #76 | Open |
+| clob-client-v2    | #65 | Open |
 
-**Action recommended**: Check `https://github.com/Polymarket/py-sdk` for POLY_1271 deposit wallet support before the next upgrade cycle.
-
----
-
-## The Bug (unchanged)
-
-`create_or_derive_api_key()` signs L1 auth using the EOA address regardless of `signature_type=POLY_1271` and `funder=deposit_wallet` config. This binds the API key to the EOA, while orders correctly set `signer=deposit_wallet`, producing:
-
-```
-HTTP 400 {"error": "the order signer address has to be the address of the API KEY"}
-```
-
-The v13 bot uses `signature_type=2` (Safe/proxy) not POLY_1271, so it is on the **legacy path** that Polymarket is phasing out. Monitor for "maker address not allowed" errors as the migration enforcement date approaches.
+Issues #56 and #58 were not individually confirmed but follow the same pattern.
 
 ---
 
-## Next Steps
+## Notable: Maintainers Recommend Migration to py-sdk
 
-1. **Check `Polymarket/py-sdk`** — this new unified SDK may be the fix vehicle. If it handles POLY_1271 deposit wallets correctly, evaluate migrating executor.py to it.
-2. **Upgrade py-clob-client-v2 to v1.1.0** and re-test executor.py with `DRY_RUN=false` (v1.1.0 changes tradeID handling — verify `create_order` response parsing still works correctly in bot.py).
-3. Continue monitoring weekly — no Polymarket staff engagement on auth issues yet.
+PR #78 (merged 2026-05-25) added a README note recommending developers migrate to the unified
+[Polymarket/py-sdk](https://github.com/Polymarket/py-sdk) instead of using py-clob-client-v2.
+
+The py-sdk is at **v0.10.0** (released 2026-09-10) and includes "scoped session keys" (v0.7.0,
+released 2026-08-26). Session keys may offer an alternative auth path, but the release notes do
+not explicitly confirm they resolve the `"order signer address has to be the address of the API KEY"`
+error for POLY_1271 accounts.
+
+**This warrants manual investigation**: py-sdk may have quietly solved the EIP-7702 problem via
+the session-key flow even without a direct issue reference.
+
+---
+
+## What Was Fixed in These Releases
+
+- v1.0.2: Tick size support only — no auth changes.
+- v1.1.0: Async transaction hash resolution only — no auth changes.
+
+---
+
+## Next Step
+
+The original bug (EIP-7702 deposit wallet / POLY_1271 not supported in py-clob-client-v2) is
+**still unresolved** in this SDK.
+
+Recommended actions:
+1. **Investigate py-sdk session keys**: Test whether `Polymarket/py-sdk` v0.7.0+ handles
+   POLY_1271 order placement without the signer mismatch error.
+2. If py-sdk works: Upgrade and re-test `executor.py` against py-sdk's trading API with
+   `MANUAL_MODE=false`.
+3. If py-sdk doesn't work: Continue monitoring py-clob-client-v2 — no Polymarket staff have
+   commented on any of the 11 tracked issues, suggesting a fix is not imminent.
