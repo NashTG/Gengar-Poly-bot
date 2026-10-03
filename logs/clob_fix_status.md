@@ -1,102 +1,42 @@
-# CLOB Fix Status — 2026-09-29
+# CLOB Fix Status — py-clob-client-v2
 
-## Summary (Updated)
+## Date Found
+2026-10-03
 
-Multiple fix signals confirmed. **Issue #115 — directly relevant to PolyBot's signature_type=2 setup —
-was closed Sep 5, 2026**, indicating the "maker address not allowed" blocker for Gnosis Safe users was
-resolved. Related issues #65 and #98 (POLY_1271 / deposit-wallet auth) are also closed. The three
-originally-tracked issues #70, #75, #76 remain open (different reporters, same bug class).
-Latest release is v1.2.0 (Sep 25, 2026).
+## Fix Signals Detected
 
-**Next step: Upgrade py-clob-client-v2 to v1.2.0 and re-test executor.py with MANUAL_MODE=false.**
-Also investigate `Polymarket/py-sdk` as the recommended replacement SDK.
+### 1. PR #39 Merged — "feat: add deposit wallet order support"
+- **URL**: https://github.com/Polymarket/py-clob-client-v2/pull/39
+- **Merged**: May 1, 2026 (released in v1.0.1rc1)
+- **What it fixes**: Adds POLY_1271 signature type support to `OrderBuilder` and `ExchangeOrderBuilderV2`, enabling deposit wallet order creation. Uses the funder address as the V2 signer with custom POLY_1271 signature payloads — directly addressing the EOA-vs-deposit-wallet auth binding.
 
----
+### 2. Issue #98 CLOSED — Exact same error message as the tracked bug
+- **URL**: https://github.com/Polymarket/py-clob-client-v2/issues/98
+- **Closed**: July 3, 2026
+- **Title**: "signature_type=3 (POLY_1271) cannot post orders: 'the order signer address has to be the address of the API KEY'"
+- **What it fixes**: The exact error reported in the monitored issues — ordering with POLY_1271 credentials now resolves without the signer-mismatch rejection.
 
-## New Fix Signals (2026-09-29 check)
+### 3. New Releases (all newer than v1.0.1)
+| Release | Date | Notes |
+|---------|------|-------|
+| v1.0.2 | July 2, 2026 | Tick size support; includes PR #39 deposit wallet fix |
+| v1.1.0 | July 17, 2026 | Async execution support; internal tradeID handling |
+| v1.2.0 | September 25, 2026 | Position-backed orders (`position_id` support) — **latest** |
 
-### Issue #115 CLOSED — Most Relevant to PolyBot
-- **Title:** "signature_type=2 orders rejected ('maker address not allowed') even with credentials
-  proven valid via old client"
-- **Repo:** Polymarket/py-clob-client-v2
-- **Closed:** September 5, 2026
-- **URL:** https://github.com/Polymarket/py-clob-client-v2/issues/115
-- **Why relevant:** PolyBot uses signature_type=2 (Gnosis Safe / Safe proxy). This is the exact error
-  PolyBot would hit. Closure indicates a fix was applied or a workaround was documented.
-- **Resolution detail:** Comments not accessible via web scrape; manual review needed.
+Latest release URL: https://github.com/Polymarket/py-clob-client-v2/releases/tag/v1.2.0
 
-### Issue #98 CLOSED
-- **Title:** "signature_type=3 (POLY_1271) cannot post orders: 'the order signer address has to be
-  the address of the API KEY'"
-- **Repo:** Polymarket/py-clob-client-v2
-- **Closed:** July 3, 2026
-- **URL:** https://github.com/Polymarket/py-clob-client-v2/issues/98
+### 4. Unified SDK Now Recommended (PR #78)
+- **URL**: https://github.com/Polymarket/py-clob-client-v2/pull/78
+- **Merged**: May 25, 2026
+- **Note**: Polymarket now recommends `Polymarket/py-sdk` (REST + WebSockets) for new projects over py-clob-client-v2. This may be the cleaner path forward.
 
-### Issue #65 CLOSED (py-clob-client-v2)
-- **Title:** "Cannot submit POLY_1271 orders — `create_or_derive_api_key` binds API key to EOA,
-  not deposit wallet"
-- **Repo:** Polymarket/py-clob-client-v2
-- **Closed:** May 17, 2026
-- **URL:** https://github.com/Polymarket/py-clob-client-v2/issues/65
+## Caveats — Still Open Issues
+The original tracked issues remain open:
+- py-clob-client-v2 #70: "POLY_1271 order placement fails: L1 auth always binds API key to EOA" — **still open**
+- py-clob-client-v2 #76: "CLOB V2 Python SDK unusable for deposit wallets - /auth/api-key doesn't support EIP-1271" — **still open**
+- clob-client-v2 #65: "createApiKey() doesn't EIP-1271-wrap L1 auth for POLY_1271 deposit wallets" — **still open**
 
-### Relevant Merged PR: #39
-- **Title:** "feat: add deposit wallet order support"
-- **Merged:** May 1, 2026
-- **URL:** https://github.com/Polymarket/py-clob-client-v2/pull/39
-- **What it fixed:** Added POLY_1271 (`SignatureTypeV2`) support for order signing, enabling
-  deposit wallet users to construct and sign orders correctly.
+The fix may be partial or require additional configuration. Issue #98 (same error, different reporter) was closed, suggesting some configurations now work.
 
----
-
-## Release Changelog (all > v1.0.1)
-
-| Version | Released | What Changed |
-|---------|----------|--------------|
-| **v1.2.0** | 2026-09-25 | PolyV2 position orders: `position_id` support, auto Exchange V3 signing |
-| **v1.1.0** | 2026-07-17 | Async execution: resolve transaction hashes internally (API now returns `tradeIDs`) |
-| **v1.0.2** | 2026-07-02 | CLOB tick sizes `0.005` and `0.0025` added |
-
-- v1.0.2: https://github.com/Polymarket/py-clob-client-v2/releases/tag/v1.0.2
-- v1.1.0: https://github.com/Polymarket/py-clob-client-v2/releases/tag/v1.1.0
-- v1.2.0: https://github.com/Polymarket/py-clob-client-v2/releases/tag/v1.2.0
-
----
-
-## Tracked Issues Status (as of 2026-09-29)
-
-| Repo | Issue | Status | Notes |
-|------|-------|--------|-------|
-| py-clob-client-v2 | #70 | **Open** | POLY_1271 L1 auth binds API key to EOA — no Polymarket staff response |
-| py-clob-client-v2 | #75 | **Open** | POLY_1271 signer ≠ API KEY address — no Polymarket staff response |
-| py-clob-client-v2 | #76 | **Open** | /auth/api-key lacks EIP-1271 support — no Polymarket staff response |
-| py-clob-client-v2 | #115 | **CLOSED** (Sep 5) | sig_type=2 "maker address not allowed" — **DIRECTLY RELEVANT TO POLYBOT** |
-| py-clob-client-v2 | #98 | **CLOSED** (Jul 3) | POLY_1271 order signer mismatch resolved |
-| py-clob-client-v2 | #65 | **CLOSED** (May 17) | create_or_derive_api_key EOA binding resolved |
-| py-clob-client-v2 | #55–64, #71 | Not individually checked | Same auth bug class |
-| clob-client-v2 | #65 | Not checked | TypeScript SDK, not checked this run |
-
----
-
-## Alternative Path: Polymarket/py-sdk
-
-PR #78 (merged 2026-05-25) added a README note recommending migration to the unified
-[Polymarket/py-sdk](https://github.com/Polymarket/py-sdk).
-
-This SDK is described as the official replacement offering "one coherent, workflow-oriented
-interface" covering trading, auth, and wallet workflows. The py-sdk's "scoped session keys"
-feature (v0.7.0, released 2026-08-26) may offer a cleaner auth path than py-clob-client-v2's
-`create_or_derive_api_key`.
-
----
-
-## Recommended Next Steps
-
-1. **Upgrade py-clob-client-v2 to v1.2.0** and re-test executor.py with `MANUAL_MODE=false`.
-   - Focus: does order placement succeed for the PolyBot Safe address with signature_type=2?
-   - If issue #115's fix is included, expect the "maker address not allowed" error to be resolved.
-
-2. **Read issue #115 comments manually** at https://github.com/Polymarket/py-clob-client-v2/issues/115
-   to understand exactly what changed and if a migration step is needed.
-
-3. **Evaluate py-sdk** (https://github.com/Polymarket/py-sdk) as a longer-term replacement
-   for executor.py if py-clob-client-v2 v1.2.0 still has issues.
+## Next Step
+Upgrade py-clob-client-v2 to v1.2.0 and re-test executor.py with MANUAL_MODE=false — specifically test `create_or_derive_api_key()` with `signature_type=3` (POLY_1271) to confirm the signer-mismatch error is resolved. If issues persist, evaluate migrating to the unified `Polymarket/py-sdk`.
