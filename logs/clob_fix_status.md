@@ -1,7 +1,7 @@
-# CLOB Fix Status — 2026-10-14
+# CLOB Fix Status — 2026-10-15
 
 ## Date detected
-2026-10-14 (automated monitoring run)
+2026-10-15 (automated monitoring run)
 
 ## What changed
 
@@ -11,7 +11,8 @@
 |---------|----------|--------------|
 | v1.0.2  | Jul 2, 2026  | Tick size support (0.005, 0.0025). No auth changes. |
 | v1.1.0  | Jul 17, 2026 | Async execution: POST /order now returns tradeIDs. No auth changes. |
-| v1.2.0 (latest) | Sep 25, 2026 | PolyV2 position orders (position_id field, Exchange V3 signing). No auth changes in release notes. |
+| v1.2.0 | Sep 25, 2026 | PolyV2 position orders (position_id field, Exchange V3 signing). No auth changes in release notes. |
+| **v1.2.1 (latest)** | **Oct 15, 2026** | **DEPRECATION NOTICE — no code changes. Package is now end-of-life. Migrate to `polymarket-client`.** |
 
 ### Relevant merged PR
 
@@ -51,9 +52,20 @@ The original bug (`create_or_derive_api_key` binding the API key to the EOA inst
 
 **Note for this bot**: CLAUDE.md documents signature_type=2 (Safe/proxy), not type 3. The POLY_1271 bug may not directly affect this bot's trading path.
 
+## ⚠️ PACKAGE DEPRECATED (2026-10-15)
+
+`py-clob-client-v2` v1.2.1 is a deprecation notice: no code changes from v1.2.0. Polymarket recommends migrating to the unified SDK:
+- **`polymarket-client`** v0.13.0 (released 2026-10-09)
+- PyPI: https://pypi.org/project/polymarket-client/
+- Migration guide: https://docs.polymarket.com
+
+**No further bug fixes will land in py-clob-client-v2.**
+
 ## Next step
 
-Upgrade py-clob-client-v2 to v1.2.0 and re-test executor.py with MANUAL_MODE=false.
+**Primary:** Migrate to `polymarket-client` — py-clob-client-v2 is deprecated. Evaluate `polymarket-client` v0.13.0 for POLY_1271 / sig_type=3 support before switching.
+
+**Short-term:** Upgrade py-clob-client-v2 to v1.2.0 and re-test executor.py with MANUAL_MODE=false.
 
 Test specifically:
 1. Can `create_or_derive_api_key()` succeed with the Safe wallet (signature_type=2)?
