@@ -1,4 +1,4 @@
-# CLOB Fix Status — 2026-10-17
+# CLOB Fix Status — 2026-10-18 (updated; first detected 2026-10-17)
 
 ## Summary
 
