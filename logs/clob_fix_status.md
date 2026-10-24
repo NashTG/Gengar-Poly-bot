@@ -1,9 +1,9 @@
-# CLOB Fix Status — 2026-10-22 (updated)
+# CLOB Fix Status — 2026-10-24 (updated)
 
 ## CRITICAL: py-clob-client-v2 is DEPRECATED
 
-**Last checked:** 2026-10-22  
-**Previous check:** 2026-10-21  
+**Last checked:** 2026-10-24  
+**Previous check:** 2026-10-22  
 **Checked by:** Scheduled CLOB monitor
 
 ---
@@ -56,6 +56,17 @@ GitHub releases page: https://github.com/Polymarket/py-clob-client-v2/releases
 
 **clob-client-v2 (upstream TypeScript SDK):**
 - https://github.com/Polymarket/clob-client-v2/issues/65 — **STILL OPEN** as of 2026-10-22. Staff comment (May 2026): "There's nothing to solve." Users disputed this through August 2026.
+
+### Community-confirmed workarounds (not official fixes)
+
+**Issue #70 (Oct 8 community comment — vladII987):** Using py-clob-client-v2 v1.2.0 with `signature_type=3`, EOA-based L1 key via `derive-api-key`, and deposit wallet as maker/signer, an order filled end-to-end. Applies to **EIP-1167 proxy deposit wallets only**. EIP-7702 delegated wallets are still blocked (RICK0308, Sep 8: `isValidSignature` path fails, session-key classification blocks owner management).
+
+**Issue #75 (Aug 21 community comment — dcpf1):** Working POLY_1271 setup trading live since June on v1.0.1:
+1. Create a client already configured with `signature_type=3` and `funder` set
+2. Call `create_or_derive_api_key()` on THAT client (not a default-configured client)
+3. Deriving from a default client still binds the key to the EOA
+
+**PolyBot note:** The bot uses `signature_type=2` (Gnosis Safe) with `SAFE_ADDRESS=0xbcd8Da52677827188A4c205dCC0D46eda3038A50`. This is a different account architecture from the EIP-7702/EIP-1167 deposit wallet path. The migration to `polymarket-client` is the correct path regardless.
 
 **Bottom line:** The core auth bug is unresolved in py-clob-client-v2, which is why Polymarket archived the package.
 
