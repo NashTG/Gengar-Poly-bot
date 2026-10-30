@@ -1,10 +1,14 @@
-# CLOB Fix Status — 2026-10-28 (updated)
+# CLOB Fix Status — 2026-10-30 (updated)
 
 ## CRITICAL: py-clob-client-v2 is DEPRECATED
 
-**Last checked:** 2026-10-28  
-**Previous check:** 2026-10-27  
+**Last checked:** 2026-10-30  
+**Previous check:** 2026-10-28  
 **Checked by:** Scheduled CLOB monitor
+
+### 2026-10-30 check summary
+
+No new developments since 2026-10-28. py-clob-client-v2 still at v1.2.1 (deprecated). No POLY_1271 fix merged. `polymarket-client` latest remains v0.14.0. Issues #70, #75, #85, #87 remain open. No Polymarket staff comments on open issues. GitHub MCP access not available for direct issue queries; findings via web search.
 
 ### 2026-10-28 check summary
 
