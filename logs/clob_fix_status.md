@@ -1,10 +1,14 @@
-# CLOB Fix Status — 2026-10-30 (updated)
+# CLOB Fix Status — 2026-10-31 (updated)
 
 ## CRITICAL: py-clob-client-v2 is DEPRECATED
 
-**Last checked:** 2026-10-30  
-**Previous check:** 2026-10-28  
+**Last checked:** 2026-10-31  
+**Previous check:** 2026-10-30  
 **Checked by:** Scheduled CLOB monitor
+
+### 2026-10-31 check summary
+
+No new developments since 2026-10-30. py-clob-client-v2 still at v1.2.1 (deprecated). No POLY_1271 fix merged. Issues #70, #75 remain open with no Polymarket staff comments. No new merged PRs touching auth since #120 (Oct 15 deprecation notice). Confirmed via GitHub releases page and issue page fetches.
 
 ### 2026-10-30 check summary
 
