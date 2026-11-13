@@ -1,4 +1,4 @@
-# CLOB Fix Status — 2026-11-06
+# CLOB Fix Status — 2026-11-13 (updated)
 
 ## Status: MAJOR UPDATE — Package deprecated, migrate to polymarket-client
 
@@ -14,11 +14,15 @@
 | v1.1.0  | 2026-07-17 | Async execution support, no auth changes |
 | v1.2.0  | 2026-09-25 | (details not checked) |
 | **v1.2.1** | **2026-10-15** | **Package DEPRECATED — migrate to `polymarket-client`** |
+| **v1.2.2** | **2026-11-12** | Amoy V3 signing address fix + Python 3.9 CI pin (PR #124) |
 
 Release page: https://github.com/Polymarket/py-clob-client-v2/releases
 
 ### Relevant merged PR
 
+- **#124** — "fix: correct Amoy V3 signing address and pin Python 3.9 runners" — merged 2026-11-12 (v1.2.2)
+  - Testnet signing fix only; does NOT address the EIP-7702/deposit-wallet auth issue
+  - PR: https://github.com/Polymarket/py-clob-client-v2/pull/124
 - **#39** — "feat: add deposit wallet order support" — merged 2026-05-01 by suhailkakar, approved by JonathanAmenechi
   - Adds POLY_1271 order signing via `signature_type=3` and `funder` parameter
   - Was included in v1.0.1rc1 / v1.0.1
